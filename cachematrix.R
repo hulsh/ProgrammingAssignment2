@@ -1,21 +1,34 @@
-## some instructions for testing your makeCacheMatrix and cacheSolve functions
+makeCacheMatrix <- function(x=matrix(,nrow=2,ncol=2)) {
+  result<-matrix(,nrow=2,ncol=2) #set 2x2 matrix of NA's
+  set <- function(y) { #create set fxn
+    x <<- y
+    result<<-matrix(,nrow=2,ncol=2) #set 2x2 matrix of NA's
+  }
+  get<-function()x
+  setinverse <- function(solve)result<<-solve #create inv fxn
+  getinverse<-function()result     
+  list(set=set, get=get,        #create call ID's
+       setinverse=setinverse, 
+       getinverse=getinverse)
+}
+  
+cacheSolve<-function(x,...) {
+  result <-x$getinverse() 
+  if(all(is.na(result))==F) {       #chk to see if inv already cached
+    message("getting cached data")
+    return(result)
+  }
+  data<-x$get()
+  result<-solve(data,...)  #find inverse of matrix
+  x$setinverse(result)
+  result                   #print inverse of provided matrix
+}
 
-This is from this post: "Simple test matrices for the lexical scoping programming assignment"
-
-https://www.coursera.org/learn/r-programming/discussions/weeks/3/threads/ePlO1eMdEeahzg7_4P4Vvg
 
 
-R session:
 
-> # Matrices for testing the R functions 
-> # makeCacheMatrix and cacheSolve
-> # in the Coursera R Programming Course
-> #
-> # First, 
-> # If you haven't read Leonard Greski's invaluable
-> # [TIPS] Demystifying makeVector()  Post
-> # be sure to do so.
-> #
+
+
 > # A simple matrix m1 with a simple matrix inverse n1
 > # Define
 > m1 <- matrix(c(1/2, -1/4, -1, 3/4), nrow = 2, ncol = 2)
@@ -24,21 +37,7 @@ R session:
 [1,]  0.50 -1.00
 [2,] -0.25  0.75
 > 
-> # You can use m1 to test your 
-> # makeCacheMatrix and cacheSolve functions.
-> # Since the grading is done on the correctness of your 
-> # makeCacheMatrix and cacheSolve functions and your 
-> # comments on how they work, using this (or some other)   
-> # test matrix to check your code 
-> # before submitting it 
-> # is OK relative to the Coursera Honor Code.
-> # (Checking code with test cases is always a good idea.)
-> #
-> # m1 was constructed (using very simple linear algebra, so
-> # no references are given, almost surely the examples
-> # in this post have been given many times before) 
-> # to have a simple marrix inverse, call it n1.
-> # This means  m1 %*% n1 (%*% is matrix multiply in R) 
+
 > # is the 2 row by 2 column Identity matrix I2
 > I2 <- matrix(c(1,0,0,1), nrow = 2, ncol = 2)
 > I2
@@ -118,3 +117,11 @@ getting cached data
 [1,]    3    7
 [2,]    1    5
 > 
+  
+  
+  #m1 <- matrix(c(1/2, -1/4, -1, 3/4), nrow = 2, ncol = 2)
+  #n1 <- matrix(c(6,2,8,4), nrow = 2, ncol = 2)
+  #myMatrix_object <- makeCacheMatrix(m1)
+  #myMatrix_object <- makeCacheMatrix(n1)
+  #cacheSolve(myMatrix_object)
+  
